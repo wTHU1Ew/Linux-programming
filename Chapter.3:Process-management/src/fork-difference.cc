@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <time.h>
+#include <sys/wait.h>
 
 const int times = 5;
 
@@ -69,5 +70,7 @@ int main(int argc, char *argv[])
         }
         printf("!!!parent: c+d= %d!!!\n", (c + d));
     }
+    
+    
     return 0;
 }
