@@ -21,6 +21,7 @@ int main()
     {
         struct sigaction action, oldaction;
         action.sa_handler = showtime;
+        action.sa_flags=SA_NODEFER;
         if (sigaction(SIGUSR1, &action, &oldaction) != 0)
         {
             perror("sigaction");
@@ -40,12 +41,20 @@ int main()
         {
             if ((waitp = waitpid(pid, NULL, WNOHANG | WCONTINUED)) >= 0)
             {
+                
+                
                 scanf("%c", &flag);
                 if (flag == '1')
                 {
                     kill(pid, SIGUSR1);
                 }
+                if(flag=='2')
+                {
+                    kill(pid, SIGTERM);
+                }
+                while ((flag=getchar())!='\n'&&flag!=EOF);
             }
+            
         }
     }
 }
@@ -62,5 +71,7 @@ void showtime(int sig)
     char strtime[100];
     memset(strtime, 0, sizeof(strtime));
     strftime(strtime, sizeof(strtime), "%Y-%m-%d: %H:%M:%S", local_time);
-    printf("%s\n", strtime);
+    write(STDOUT_FILENO, strtime, strlen(strtime));
+    write(STDOUT_FILENO, "\n", 1);
+    fflush(stdout);
 }
